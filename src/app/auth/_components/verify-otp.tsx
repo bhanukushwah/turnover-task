@@ -18,9 +18,22 @@ const VerifyOTP = ({ email }: { email: string }) => {
         mutate({ email, otp })
     }
 
+    const maskEmail = (email: string) => {
+        // Split email into username and domain parts
+        const [username, domain] = email.split('@');
+
+        // Mask characters in the username, except the first letter
+        const maskedUsername = username && username?.slice(0, 3) + '*'.repeat(username.length - 3);
+
+        const maskedEmail = `${maskedUsername}@${domain}`;
+
+        return maskedEmail;
+    };
+
+
     return (
         <Card title='Login'>
-            <p className='text-center'>Enter the 8 digit code you have received on <strong>{email}</strong></p>
+            <p className='text-center'>Enter the 8 digit code you have received on <strong>{maskEmail(email)}</strong></p>
 
             <div className='flex flex-col space-y-1 my-8'>
                 <p>Code</p>

@@ -41,7 +41,7 @@ const Navbar = () => {
                     ECOMMERCE
                 </div>
 
-                <ul className='flex gap-8 font-semibold'>
+                <ul className='hidden md:flex gap-8 font-semibold'>
                     <li>
                         <Link href={'#'}>
                             Categories

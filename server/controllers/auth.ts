@@ -13,12 +13,24 @@ import { generateOtp, generateToken } from "server/utils";
 import { sendOtpMail } from "../utils/email";
 import { type Context } from "server/context";
 
-export const sendOtp = ({ email, ctx }: { email: string; ctx: Context }) => {
+export const sendOtp = async ({
+  email,
+  ctx,
+}: {
+  email: string;
+  ctx: Context;
+}) => {
   const otp = generateOtp();
   const expiry = new Date(new Date().getTime() + 30 * 60 * 1000).toISOString();
 
-  void ctx.db.otp.create({
-    data: {
+  await ctx.db.otp.upsert({
+    where: { email },
+    create: {
+      otp,
+      email,
+      expiry,
+    },
+    update: {
       otp,
       email,
       expiry,
@@ -61,7 +73,7 @@ export const registerController = async ({
     const { passwordHash, ...userWithoutPassword } = user;
 
     // send email with otp
-    sendOtp({ email, ctx });
+    await sendOtp({ email, ctx });
 
     return {
       data: {
@@ -109,7 +121,7 @@ export const loginController = async ({
 
     const { passwordHash, ...userWithoutPassword } = user;
 
-    sendOtp({ email, ctx });
+    await sendOtp({ email, ctx });
 
     return {
       message: "Otp is successfully sent to your email.",

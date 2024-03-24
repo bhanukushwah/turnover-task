@@ -13,7 +13,7 @@ import VerifyOTP from '../_components/verify-otp'
 const Signup = () => {
     const [email, setEmail] = useState("")
 
-    const { mutate } = api.auth.signup.useMutation({
+    const { mutate, error } = api.auth.signup.useMutation({
         onSuccess: (res) => setEmail(res?.data?.user?.email)
     })
 
@@ -34,6 +34,9 @@ const Signup = () => {
         <div className='flex justify-center my-8'>
             {
                 email ? <VerifyOTP email={email} /> : <Card title='Create your account'>
+                    {
+                        error && <p className='text-center text-sm text-red-500 mb-2'>{error.message}</p>
+                    }
                     <form className='space-y-8' onSubmit={handleSubmit(onSubmit)}>
                         <div>
                             <Label htmlFor='Name'>Name</Label>

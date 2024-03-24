@@ -3,7 +3,7 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import Link from 'next/link'
 import React, { useState } from 'react'
-import { SubmitHandler, useForm } from 'react-hook-form';
+import { type SubmitHandler, useForm } from 'react-hook-form';
 import { Button, Card, Input, Label } from '@/components'
 import { api } from '@/trpc/react';
 import { LoginSchema, type LoginUserInput } from '@/schema/auth';
@@ -11,7 +11,7 @@ import VerifyOTP from '../_components/verify-otp';
 
 const Login = () => {
     const [email, setEmail] = useState("")
-    const { mutate } = api.auth.login.useMutation({
+    const { mutate, error } = api.auth.login.useMutation({
         onSuccess: (res) => setEmail(res?.data?.user?.email)
     })
 
@@ -37,6 +37,9 @@ const Login = () => {
                     <p className='text-center pt-2'>The next gen business marketplace</p>
 
 
+                    {
+                        error && <p className='text-center text-sm text-red-500 mb-2'>{error.message}</p>
+                    }
                     <form className='space-y-8 mt-8' onSubmit={handleSubmit(onSubmit)}>
                         <div>
                             <Label htmlFor='Email'>Email</Label>
